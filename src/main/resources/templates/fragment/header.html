@@ -10,17 +10,27 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">Home</a>
+            <a class="nav-link active" aria-current="page" href="#">글목록</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Board</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">My Page</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Logout</a>
-          </li>
+          <th:block sec:authorize="isAuthenticated()">
+            <li class="nav-item">
+              <a class="nav-link" href="#">글쓰기</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">내정보</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/v1/auth/logout">로그아웃</a>
+            </li>
+          </th:block>
+          <th:block sec:authorize="isAnonymous()">
+            <li class="nav-item">
+              <a class="nav-link" href="/v1/auth/login">로그인</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/v1/auth/join">회원가입</a>
+            </li>
+          </th:block>
         </ul>
         <form class="d-flex" role="search">
           <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
@@ -30,5 +40,4 @@
     </div>
   </nav>
 </th:block>
-
 </html>
