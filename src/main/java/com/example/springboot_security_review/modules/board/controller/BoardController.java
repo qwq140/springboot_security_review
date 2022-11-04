@@ -15,4 +15,10 @@ public class BoardController {
         return "board/board_list";
     }
 
+    @GetMapping("/write")
+    public String writeForm(){
+        return "board/board_form";
+    }
+
+
 }

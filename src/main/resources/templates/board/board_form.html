@@ -1,0 +1,65 @@
+<html layout:decorate="layout/default_layout"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<th:block layout:fragment="css">
+  <style>
+    .ck-editor__editable {
+      height: 400px;
+    }
+    .button {}
+  </style>
+</th:block>
+<div layout:fragment="content">
+  <div class="container">
+    <br><br><br>
+    <form>
+      <div class="form-group">
+        <input type="text" class="form-control" placeholder="Enter Title" name="title" id="title"/>
+      </div>
+      <br>
+      <div id="editor">
+        <p>This is some sample content.</p>
+      </div>
+      <br>
+      <div>
+        <input class="btn-file-input" id="btnFile" type="file" name="file" onchange="readURL(this)">
+      </div>
+      <div>
+        <img id="preview"/>
+      </div>
+      <br>
+      <button type="button" id="btn-save" class="btn btn-success">Submit</button>
+    </form>
+  </div>
+  <script src="https://cdn.ckeditor.com/ckeditor5/34.2.0/classic/ckeditor.js"></script>
+  <script>
+    /**
+     * 에디터 관련
+     * */
+    let myEditor
+
+    ClassicEditor.create(document.querySelector('#editor'),{
+      ckfinder:{
+        uploadUrl: 'http://localhost:8080/v1/api/file'
+      }
+    }).then(editor => {
+              myEditor = editor;
+            })
+            .catch(error => {
+              console.error(error);
+            });
+
+    function readURL(input) {
+      if(input.files && input.files[0]){
+        let reader = new FileReader();
+        reader.onload = function (e) {
+          document.getElementById('preview').src = e.target.result;
+        }
+        reader.readAsDataURL(input.files[0]);
+      } else {
+        document.getElementById('preview').src = "";
+      }
+    }
+  </script>
+</div>
+</html>

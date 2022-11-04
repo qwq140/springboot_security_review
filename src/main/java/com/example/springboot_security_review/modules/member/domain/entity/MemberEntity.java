@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 
 @Data
@@ -35,7 +35,7 @@ public class MemberEntity {
     private MemberRoleType role;
 
     @CreationTimestamp
-    private Timestamp createDate;
+    private LocalDateTime createDate;
 
     public MemberDto toDto(){
         return MemberDto.builder()
