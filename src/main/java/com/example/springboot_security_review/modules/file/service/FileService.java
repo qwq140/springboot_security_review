@@ -96,9 +96,7 @@ public class FileService {
         return fileName.substring(index+1);
     }
 
-    public String editorUploadImage(MultipartFile file, MultipartHttpServletRequest request) throws IOException {
-        System.out.println(request.getLocalAddr());
-        System.out.println(request.getLocalPort());
+    public String editorUploadImage(MultipartFile file) throws IOException {
 
         String originalName = file.getOriginalFilename();
         String extension = getExtension(originalName);
@@ -111,13 +109,6 @@ public class FileService {
 
         Files.write(imageFilePath, file.getBytes());
 
-//        String imagePathUrl = uploadFolder+"editor"+File.separator+savedName;
-//        System.out.println(imagePathUrl);
-//
-//        File file1 = new File(imagePathUrl);
-//        file1.getParentFile().mkdirs();
-//        file.transferTo(file1);
-        System.out.println("/upload/"+save);
         return "/upload/" + save;
     }
 }

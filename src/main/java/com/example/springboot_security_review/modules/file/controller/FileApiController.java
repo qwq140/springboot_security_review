@@ -42,7 +42,7 @@ public class FileApiController {
     public HttpEntity<?> editorImageUpload(MultipartHttpServletRequest request) {
         MultipartFile file = request.getFile("upload");
         try {
-            return new ResponseEntity<>(FileEditorResponse.builder().uploaded(true).url(fileService.editorUploadImage(file, request)).build(), HttpStatus.OK);
+            return new ResponseEntity<>(FileEditorResponse.builder().uploaded(true).url(fileService.editorUploadImage(file)).build(), HttpStatus.OK);
         } catch (IOException e) {
             System.out.println("test");
             throw new RuntimeException(e);
