@@ -40,13 +40,13 @@
 
     ClassicEditor.create(document.querySelector('#editor'),{
       ckfinder:{
-        uploadUrl: 'http://localhost:8080/v1/api/file'
+        uploadUrl: '/v1/api/file/editor'
       }
     }).then(editor => {
               myEditor = editor;
             })
             .catch(error => {
-              console.error(error);
+              // console.error(error);
             });
 
     function readURL(input) {

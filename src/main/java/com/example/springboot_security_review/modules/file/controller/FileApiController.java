@@ -2,6 +2,7 @@ package com.example.springboot_security_review.modules.file.controller;
 
 import com.example.springboot_security_review.eunms.FileType;
 import com.example.springboot_security_review.modules.file.domain.dto.response.FileDto;
+import com.example.springboot_security_review.modules.file.domain.dto.response.FileEditorResponse;
 import com.example.springboot_security_review.modules.file.service.FileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
@@ -12,9 +13,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/v1/api/file")
@@ -33,5 +36,16 @@ public class FileApiController {
             return new ResponseEntity<>(null, HttpStatus.UNPROCESSABLE_ENTITY);
         }
         return new ResponseEntity<>(fileDto, HttpStatus.OK);
+    }
+
+    @PostMapping("/editor")
+    public HttpEntity<?> editorImageUpload(MultipartHttpServletRequest request) {
+        MultipartFile file = request.getFile("upload");
+        try {
+            return new ResponseEntity<>(FileEditorResponse.builder().uploaded(true).url(fileService.editorUploadImage(file, request)).build(), HttpStatus.OK);
+        } catch (IOException e) {
+            System.out.println("test");
+            throw new RuntimeException(e);
+        }
     }
 }

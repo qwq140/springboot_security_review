@@ -8,13 +8,20 @@ import com.example.springboot_security_review.modules.file.repository.FileListRe
 import com.example.springboot_security_review.modules.file.repository.FileRepository;
 import com.example.springboot_security_review.utils.Utils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.multipart.MultipartRequest;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.UUID;
 
@@ -25,11 +32,12 @@ public class FileService {
     private final FileRepository fileRepository;
     private final FileListRepository fileListRepository;
 
-    String path;
+    @Value("${file.path}")
+    private String uploadFolder;
 
     @Transactional
     public FileDto saveFile(MultipartFile file, FileType type, HttpServletRequest request){
-        path = request.getSession().getServletContext().getRealPath("");
+        String path = request.getSession().getServletContext().getRealPath("");
         System.out.println(path);
 
         FileEntity savedFile = fileRepository.save(
@@ -40,7 +48,7 @@ public class FileService {
         if(savedFile.getIdx() > 0){
             String url;
             try {
-                url = uploadFile(file, savedFile.getIdx());
+                url = uploadFile(file, savedFile.getIdx(), path);
                 System.out.println("업로드 성공");
             } catch (IOException e) {
                 System.out.println("업로드 실패");
@@ -65,7 +73,7 @@ public class FileService {
         return savedFile.toDto();
     }
 
-    private String uploadFile(MultipartFile file, Long fileIdx) throws IOException {
+    private String uploadFile(MultipartFile file, Long fileIdx, String path) throws IOException {
         String originalName = file.getOriginalFilename();
         String extension = getExtension(originalName);
         String uuid = UUID.randomUUID().toString();
@@ -86,5 +94,30 @@ public class FileService {
 
         int index = fileName.indexOf(".");
         return fileName.substring(index+1);
+    }
+
+    public String editorUploadImage(MultipartFile file, MultipartHttpServletRequest request) throws IOException {
+        System.out.println(request.getLocalAddr());
+        System.out.println(request.getLocalPort());
+
+        String originalName = file.getOriginalFilename();
+        String extension = getExtension(originalName);
+        String uuid = UUID.randomUUID().toString();
+        String savedName = Utils.getCurrentDate() + "_" + uuid + '.' +extension;
+
+        String save = "editor/"+savedName;
+
+        Path imageFilePath = Paths.get(uploadFolder+save);
+
+        Files.write(imageFilePath, file.getBytes());
+
+//        String imagePathUrl = uploadFolder+"editor"+File.separator+savedName;
+//        System.out.println(imagePathUrl);
+//
+//        File file1 = new File(imagePathUrl);
+//        file1.getParentFile().mkdirs();
+//        file.transferTo(file1);
+        System.out.println("/upload/"+save);
+        return "/upload/" + save;
     }
 }

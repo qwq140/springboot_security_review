@@ -15,4 +15,14 @@ public class FileListDto {
     private String originalName; // 파일 원본이름
     private String extension; // 파일 확장자
     private String url; // 파일 경로
+
+    public FileListEntity toEntity(){
+        return FileListEntity.builder()
+                .idx(idx)
+                .originalName(originalName)
+                .extension(extension)
+                .url(url)
+                .build();
+    }
+
 }
