@@ -5,9 +5,12 @@ import com.example.springboot_security_review.modules.auth.service.AuthService;
 import com.example.springboot_security_review.modules.member.domain.dto.response.MemberDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/v1/auth")
@@ -27,7 +30,7 @@ public class AuthController {
     }
 
     @PostMapping("/join")
-    public String join(JoinReqDto joinReqDto) {
+    public String join(@Valid JoinReqDto joinReqDto, BindingResult bindingResult) {
         authService.join(joinReqDto);
         return "redirect:/v1/auth/login";
     }
