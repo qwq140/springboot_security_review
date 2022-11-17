@@ -31,7 +31,7 @@ public class FileApiController {
     public HttpEntity<?> uploadImageFile(@RequestParam(name = "file") MultipartFile file, @RequestParam(required = false) FileType type, HttpServletRequest request){
         String path = request.getSession().getServletContext().getRealPath("/").concat("resources");
         System.out.println(path+File.separator+"upload");
-        FileDto fileDto = fileService.saveFile(file, type, request);
+        FileDto fileDto = fileService.saveFile(file, type);
         if(fileDto == null){
             return new ResponseEntity<>(null, HttpStatus.UNPROCESSABLE_ENTITY);
         }

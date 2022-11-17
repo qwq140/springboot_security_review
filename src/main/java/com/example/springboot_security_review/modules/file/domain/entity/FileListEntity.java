@@ -35,6 +35,7 @@ public class FileListEntity {
     private String extension;
     private Long size;
     private String url;
+    private String path;
 
     @CreationTimestamp
     private LocalDateTime createDate;

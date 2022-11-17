@@ -1,0 +1,103 @@
+<html layout:decorate="layout/default_layout"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<th:block layout:fragment="css">
+  <style>
+    .input-group {
+      margin-bottom : 15px
+    }
+    .form-group {
+      margin-bottom : 15px
+    }
+    .img-div {
+      margin-bottom : 10px
+    }
+  </style>
+</th:block>
+<div layout:fragment="content">
+  <div class = "container" style="margin-top:80px">
+    <form role="form" method="post" enctype="multipart/form-data" action="/v1/admin/product" id="product_form">
+
+      <p class="h2" style="margin-bottom: 40px">
+        상품 등록
+      </p>
+
+      <div class="form-group">
+        <select class="form-select" name="productStatus">
+          <option th:each="statusValue : ${T(com.example.springboot_security_review.eunms.ProductStatus).values()}" th:value="${statusValue}" th:text="${statusValue.getValue()}"></option>
+        </select>
+      </div>
+
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text">상품명</span>
+        </div>
+        <input type="text" name="name" class="form-control" placeholder="상품명을 입력해주세요">
+      </div>
+
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text">가격</span>
+        </div>
+        <input type="number" name="price" class="form-control" placeholder="상품의 가격을 입력해주세요">
+      </div>
+
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text">재고</span>
+        </div>
+        <input type="number" name="stock" class="form-control" placeholder="상품의 재고를 입력해주세요">
+      </div>
+
+      <div>상품 미리보기 이미지</div>
+      <div class="input-group">
+        <input type="file" class="form-control" name="thumbnail" placeholder="">
+      </div>
+
+<!--      <div class="form-group" th:each="num: ${#numbers.sequence(1,5)}">-->
+<!--        <div class="custom-file img-div">-->
+<!--          <input type="file" class="custom-file-input" name="itemImgFile">-->
+<!--          <label class="custom-file-label" th:text="상품이미지 + ${num}"></label>-->
+<!--        </div>-->
+<!--      </div>-->
+
+      <div>상품이미지</div>
+
+      <div class="input-group">
+        <input type="file" class="form-control" name="images" placeholder="">
+      </div>
+
+      <div class="input-group">
+        <input type="file" class="form-control" name="images" placeholder="">
+      </div>
+
+      <div class="input-group">
+        <input type="file" class="form-control" name="images" placeholder="">
+      </div>
+
+      <div class="input-group">
+        <input type="file" class="form-control" name="images" placeholder="">
+      </div>
+
+      <div class="input-group">
+        <input type="file" class="form-control" name="images" placeholder="">
+      </div>
+
+      <button type="submit" class="btn btn-primary" id="save_btn">저장</button>
+
+    </form>
+  </div>
+  <script>
+    // let save_btn = document.getElementById('save_btn');
+    // save_btn.addEventListener('click', () => {
+    //   let formData = new FormData(document.getElementById('product_form'));
+    //
+    //   console.log(formData);
+    //   console.log(formData.get('images'));
+    //   console.log(formData.get(''));
+    //   console.log(formData.get('file'));
+    //
+    // });
+  </script>
+</div>
+</html>

@@ -23,7 +23,7 @@ public class SecurityConfig {
         http.csrf().disable();
         http.authorizeRequests()
                 .antMatchers("/v1/member/**", "/v1/board/write").access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')") // ROLE_는 강제성이 있음.
-                .antMatchers("/v1/admin/**").access("hasRole('ROLE_ADMIN')")
+//                .antMatchers("/v1/admin/**").access("hasRole('ROLE_ADMIN')")
                 .anyRequest().permitAll()
                 .and()
                 .logout()

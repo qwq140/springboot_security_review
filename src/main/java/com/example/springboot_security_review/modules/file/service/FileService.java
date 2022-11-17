@@ -23,6 +23,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Transactional(readOnly = true)
@@ -36,9 +38,7 @@ public class FileService {
     private String uploadFolder;
 
     @Transactional
-    public FileDto saveFile(MultipartFile file, FileType type, HttpServletRequest request){
-        String path = request.getSession().getServletContext().getRealPath("");
-        System.out.println(path);
+    public FileDto saveFile(MultipartFile file, FileType type){
 
         FileEntity savedFile = fileRepository.save(
                 FileEntity.builder()
@@ -48,7 +48,7 @@ public class FileService {
         if(savedFile.getIdx() > 0){
             String url;
             try {
-                url = uploadFile(file, savedFile.getIdx(), path);
+                url = uploadFile(file, savedFile.getIdx(), type);
                 System.out.println("업로드 성공");
             } catch (IOException e) {
                 System.out.println("업로드 실패");
@@ -56,16 +56,9 @@ public class FileService {
                 return null;
             }
 
-            FileListEntity toSaveFileList = FileListEntity.builder()
-                    .url(url)
-                    .extension(getExtension(file.getOriginalFilename()))
-                    .size(file.getSize())
-                    .originalName(file.getOriginalFilename())
-                    .file(savedFile)
-                    .build();
-
-            FileListEntity savedFileList = fileListRepository.save(toSaveFileList);
-            savedFile.setFiles(Arrays.asList(savedFileList));
+            String path = uploadFolder+url;
+            String realUrl = "upload/"+url;
+            fileListEntitySave(file, realUrl, path, savedFile);
 
         } else {
             return null;
@@ -73,18 +66,81 @@ public class FileService {
         return savedFile.toDto();
     }
 
-    private String uploadFile(MultipartFile file, Long fileIdx, String path) throws IOException {
+    @Transactional
+    public FileDto saveFiles(FileType category, List<MultipartFile> files){
+        FileEntity fileEntity = FileEntity.builder()
+                .category(category)
+                .build();
+
+        FileEntity saveFile = fileRepository.save(fileEntity);
+        if(saveFile.getIdx() > 0) {
+            files.forEach(file -> {
+                try {
+                    String url = uploadFile(file, saveFile.getIdx(), category);
+                    String path = uploadFolder+url;
+                    String realUrl = "upload/"+url;
+                    fileListEntitySave(file, realUrl, path, saveFile);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+            return saveFile.toDto();
+        } else {
+            return null;
+        }
+
+    }
+
+    @Transactional
+    public FileDto saveAddFiles(FileType category, List<MultipartFile> files, Long masterIdx){
+        Optional<FileEntity> optional = fileRepository.findById(masterIdx);
+
+        if(optional.isPresent()) {
+            files.forEach(file -> {
+                try {
+                    String url = uploadFile(file, optional.get().getIdx(), category);
+                    String path = uploadFolder+url;
+                    String realUrl = "upload/"+url;
+                    fileListEntitySave(file, realUrl, path, optional.get());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+            return optional.get().toDto();
+        }
+        return saveFiles(category, files);
+    }
+
+
+    @Transactional
+    public void fileListEntitySave(MultipartFile file, String url, String path, FileEntity savedFile){
+        FileListEntity toSaveFileList = FileListEntity.builder()
+                .file(savedFile)
+                .url(url)
+                .path(path)
+                .originalName(file.getOriginalFilename())
+                .size(file.getSize())
+                .extension(getExtension(file.getOriginalFilename()))
+                .build();
+        FileListEntity savedFileList = fileListRepository.save(toSaveFileList);
+        savedFile.getFiles().add(savedFileList);
+    }
+
+    private String uploadFile(MultipartFile file, Long fileIdx, FileType category) throws IOException {
         String originalName = file.getOriginalFilename();
         String extension = getExtension(originalName);
         String uuid = UUID.randomUUID().toString();
         String savedName = Utils.getCurrentDate() + "_" + uuid + '.' +extension;
 
-        String imagePathUrl = path+"upload"+File.separator+fileIdx+File.separator+savedName;
+        String save = category.name()+"/"+fileIdx+"/"+savedName;
 
-        File file1 = new File(imagePathUrl);
-        file1.getParentFile().mkdirs();
-        file.transferTo(file1);
-        return imagePathUrl;
+        Path directoryPath = Paths.get(uploadFolder+category.name()+"/"+fileIdx);
+        Path imageFilePath = Paths.get(uploadFolder+save);
+
+        Files.createDirectories(directoryPath);
+        Files.write(imageFilePath, file.getBytes());
+
+        return save;
     }
 
     private String getExtension(String fileName){

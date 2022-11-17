@@ -27,6 +27,10 @@ spring:
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     show-sql: true
+    open-in-view: true
+    properties:
+      hibernate:
+        format_sql: true
 
 file:
   path: C:/src/upload/

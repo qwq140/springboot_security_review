@@ -40,7 +40,7 @@ public class BoardController {
         FileDto fileDto = null;
 
         if (boardSaveReqDto.getFile() != null) {
-            fileDto = fileService.saveFile(boardSaveReqDto.getFile(), FileType.board, request);
+            fileDto = fileService.saveFile(boardSaveReqDto.getFile(), FileType.BOARD);
             if(fileDto == null) {
                 // 파일 업로드 실패
                 return "redirect:/v1/board/write";
