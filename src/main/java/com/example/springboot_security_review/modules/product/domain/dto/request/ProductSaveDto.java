@@ -7,6 +7,7 @@ import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.io.File;
 import java.util.List;
 
@@ -16,13 +17,13 @@ public class ProductSaveDto {
     @NotBlank(message = "상품명을 입력해주세요")
     private String name;
 
-    @NotBlank(message = "가격을 입력해주세요")
+    @NotNull(message = "가격을 입력해주세요")
     private Integer price;
 
-    @NotBlank(message = "재고 수량을 입력해주세요")
+    @NotNull(message = "재고 수량을 입력해주세요")
     private Integer stock;
 
-    @NotBlank(message = "판매 상태를 선택해주세요")
+    @NotNull(message = "판매 상태를 선택해주세요")
     private ProductStatus productStatus;
 
     private MultipartFile thumbnail;

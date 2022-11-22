@@ -6,6 +6,7 @@ import com.example.springboot_security_review.modules.product.domain.dto.respons
 import com.example.springboot_security_review.modules.product.domain.entity.ProductEntity;
 import com.example.springboot_security_review.modules.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,8 +24,8 @@ public class ProductService {
         return productEntity.toDto();
     }
 
-    public void pagingProductList(Pageable pageable) {
-
+    public Page<ProductDto> pagingProductList(Pageable pageable) {
+        return productRepository.pagingProductList(pageable);
     }
 
 }

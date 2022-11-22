@@ -3,6 +3,7 @@ package com.example.springboot_security_review.modules.product.domain.dto.respon
 import com.example.springboot_security_review.eunms.ProductStatus;
 import com.example.springboot_security_review.modules.file.domain.dto.response.FileDto;
 import com.example.springboot_security_review.modules.file.domain.dto.response.FileListDto;
+import com.example.springboot_security_review.modules.file.domain.entity.FileEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,5 +25,16 @@ public class ProductDto {
     private FileDto file;
     private FileDto thumbnail;
     private LocalDateTime createDate;
+
+    public ProductDto(Long idx, String name, Integer stock, Integer price, ProductStatus status, FileEntity files, FileEntity thumbnail, LocalDateTime createDate){
+        this.idx = idx;
+        this.name = name;
+        this.stock = stock;
+        this.price = price;
+        this.status = status;
+        this.createDate = createDate;
+        this.file = files == null ? null : files.toDto();
+        this.thumbnail = thumbnail == null ? null : thumbnail.toDto();
+    }
 
 }
