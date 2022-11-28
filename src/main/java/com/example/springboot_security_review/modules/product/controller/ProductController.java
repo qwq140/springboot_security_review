@@ -21,7 +21,7 @@ public class ProductController {
     private final ProductService productService;
 
     @GetMapping
-    public String productList(@PageableDefault(sort = "idx", direction = Sort.Direction.DESC) Pageable pageable,
+    public String productList(@PageableDefault(sort = "idx", direction = Sort.Direction.DESC, size = 9) Pageable pageable,
                               Model model){
         model.addAttribute("productList", productService.pagingProductList(pageable));
         return "product/product_list";

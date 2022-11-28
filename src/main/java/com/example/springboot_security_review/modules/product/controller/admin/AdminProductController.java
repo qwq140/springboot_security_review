@@ -41,12 +41,12 @@ public class AdminProductController {
     public String productList(@PageableDefault(sort = "idx", direction = Sort.Direction.DESC) Pageable pageable,
                               Model model){
         model.addAttribute("productList", productService.pagingProductList(pageable));
-        return "product/product_list";
+        return "admin/product/product_list";
     }
 
     @GetMapping("/form")
     public String saveForm(){
-        return "product/product_form";
+        return "admin/product/product_form";
     }
 
     /// TODO : 이미지 업로드 때 에러 발생시 처리하기

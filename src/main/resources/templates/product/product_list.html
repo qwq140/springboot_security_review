@@ -1,62 +1,50 @@
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org" layout:decorate="layout/default_layout">
-    <div layout:fragment="content">
-        <div class = "container" style="margin-top:80px">
-        <table class="table">
-            <thead>
-            <tr>
-                <td>상품아이디</td>
-                <td>상품명</td>
-                <td>상태</td>
-                <td>재고</td>
-                <td>금액</td>
-                <td>등록일</td>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:if="${!productList.isEmpty()}" th:each="product : ${productList}">
-                <td th:text="${product.idx}"></td>
-                <td th:text="${product.name}"></td>
-                <td th:text="${product.status.getValue()}"></td>
-                <td th:text="${product.stock}"></td>
-                <td th:text="${product.price}"></td>
-                <td th:text="${product.createDate}"></td>
-            </tr>
-            <tr th:if="${productList.isEmpty()}">
-                <td colspan="6">조회된 상품이 없습니다.</td>
-            </tr>
-            </tbody>
-        </table>
+<div layout:fragment="content">
+    <div class="container" style="margin-top:80px">
+        <div class="row">
+            <th:block th:each="product : ${productList}">
+              <div class="col-md-4 margin">
+                <div class="card">
+                  <img th:src="${product.getThumbnail().getFiles().get(0).getUrl()}" class="card-img-top" height="300">
+                  <div class="card-body">
+                    <h4 class="card-title" th:text="${product.getName()}"></h4>
+                    <h3 class="card-title text-danger" th:text="|${product.getPrice()}원|"></h3>
+                  </div>
+                </div>
+              </div>
+            </th:block>
         </div>
-        <div>
-            <ul class="pagination justify-content-center"
-                th:with="pageGroup = 10,
-                start=${((productList.number)/pageGroup)*pageGroup + 1},
-                end =(${(start + pageGroup - 1) < productList.totalPages ? start + pageGroup - 1 : productList.totalPages})">
-
-                <!-- 이전버튼 1페이지 일 때는 disable 하기 -->
-                <li class="page-item" th:classappend="${productList.number eq 0 ? 'disabled' : null}">
-                    <a class="page-link" href="javascript:void(0)" th:onclick="goPage([[${productList.number - 1}]])">Previous</a>
-                </li>
-                <!-- 페이지 요소들 -->
-                <th:block th:each="page : ${#numbers.sequence(start, end)}">
-                    <li class="page-item" th:classappend="${page == productList.number + 1 ? 'active' : null}">
-                        <a class="page-link" href="javascript:void(0)" th:text="${page}" th:onclick="goPage([[${page - 1}]])"></a>
-                    </li>
-                </th:block>
-                <!-- 다음버튼 마지막 페이지 일 때 disable 하기 -->
-                <li class="page-item" th:classappend="${productList.last ? 'disabled' : null}">
-                    <a class="page-link" href="javascript:void(0)" th:onclick="goPage([[${productList.number + 1}]])">Next</a>
-                </li>
-            </ul>
-        </div>
-        <script>
-            let goPage = (page) => {
-                let params = new URLSearchParams(location.search);
-                let url = '/v1/admin/product';
-                params.set('page', page);
-                url += `?${params.toString()}`
-                location.href = url;
-            }
-        </script>
     </div>
+    <div>
+      <ul class="pagination justify-content-center"
+          th:with="pageGroup = 10,
+                  start=${((productList.number)/pageGroup)*pageGroup + 1},
+                  end =(${(start + pageGroup - 1) < productList.totalPages ? start + pageGroup - 1 : (productList.totalPages == 0? 1 : productList.totalPages)})">
+
+        <!-- 이전버튼 1페이지 일 때는 disable 하기 -->
+        <li class="page-item" th:classappend="${productList.number eq 0 ? 'disabled' : null}">
+          <a class="page-link" href="javascript:void(0)" th:onclick="goPage([[${productList.number - 1}]])">Previous</a>
+        </li>
+        <!-- 페이지 요소들 -->
+        <th:block th:each="page : ${#numbers.sequence(start, end)}">
+          <li class="page-item" th:classappend="${page == productList.number + 1 ? 'active' : null}">
+            <a class="page-link" href="javascript:void(0)" th:text="${page}" th:onclick="goPage([[${page - 1}]])"></a>
+          </li>
+        </th:block>
+        <!-- 다음버튼 마지막 페이지 일 때 disable 하기 -->
+        <li class="page-item" th:classappend="${productList.last ? 'disabled' : null}">
+          <a class="page-link" href="javascript:void(0)" th:onclick="goPage([[${productList.number + 1}]])">Next</a>
+        </li>
+      </ul>
+    </div>
+    <script>
+        let goPage = (page) => {
+            let params = new URLSearchParams(location.search);
+            let url = '/v1/admin/product';
+            params.set('page', page);
+            url += `?${params.toString()}`
+            location.href = url;
+        }
+    </script>
+</div>
 </html>
