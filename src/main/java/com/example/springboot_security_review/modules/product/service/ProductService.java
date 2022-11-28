@@ -1,5 +1,6 @@
 package com.example.springboot_security_review.modules.product.service;
 
+import com.example.springboot_security_review.handler.exception.CustomException;
 import com.example.springboot_security_review.modules.file.domain.dto.response.FileDto;
 import com.example.springboot_security_review.modules.product.domain.dto.request.ProductSaveDto;
 import com.example.springboot_security_review.modules.product.domain.dto.response.ProductDto;
@@ -10,6 +11,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -27,5 +30,11 @@ public class ProductService {
     public Page<ProductDto> pagingProductList(Pageable pageable) {
         return productRepository.pagingProductList(pageable);
     }
+
+    public ProductDto getProductDetail(Long idx) {
+        ProductEntity productEntity = productRepository.findById(idx).orElseThrow(() -> new CustomException("해당 상품을 찾을 수 없습니다."));
+        return productEntity.toDto();
+    }
+
 
 }

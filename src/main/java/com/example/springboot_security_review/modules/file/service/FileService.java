@@ -57,7 +57,7 @@ public class FileService {
             }
 
             String path = uploadFolder+url;
-            String realUrl = "upload/"+url;
+            String realUrl = "/upload/"+url;
             fileListEntitySave(file, realUrl, path, savedFile);
 
         } else {
@@ -78,7 +78,7 @@ public class FileService {
                 try {
                     String url = uploadFile(file, saveFile.getIdx(), category);
                     String path = uploadFolder+url;
-                    String realUrl = "upload/"+url;
+                    String realUrl = "/upload/"+url;
                     fileListEntitySave(file, realUrl, path, saveFile);
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -100,7 +100,7 @@ public class FileService {
                 try {
                     String url = uploadFile(file, optional.get().getIdx(), category);
                     String path = uploadFolder+url;
-                    String realUrl = "upload/"+url;
+                    String realUrl = "/upload/"+url;
                     fileListEntitySave(file, realUrl, path, optional.get());
                 } catch (IOException e) {
                     e.printStackTrace();
